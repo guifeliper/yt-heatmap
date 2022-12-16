@@ -1,6 +1,5 @@
 import chromium from "chrome-aws-lambda";
 import puppeteer from "puppeteer-core";
-import fs from "fs";
 
 async function getHtml(url, options) {
   const browser = await puppeteer.launch({
@@ -22,14 +21,7 @@ async function getHtml(url, options) {
 async function getYTInitialData(html) {
   const ytDutyData = html.split('">var ytInitialData = ', 3);
   const ytInitialData = JSON.parse(ytDutyData[1].split(";</script>", 2)[0]);
-  fs.writeFile(
-    "assets/yttInitialData.json",
-    JSON.stringify(ytInitialData, null, " "),
-    function (err) {
-      if (err) return console.log(err);
-      console.log("All your initial data is on ytInitialData.json");
-    }
-  );
+
   return ytInitialData;
 }
 

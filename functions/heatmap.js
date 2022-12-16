@@ -7,7 +7,15 @@ let getAverage = (arr) => {
 };
 
 export const handler = async (event, context) => {
-  var videoUrl = "https://www.youtube.com/watch?v=95PnFRjh-IE";
+  const { body } = event;
+  const videoUrl = JSON.parse(body).videoURL;
+
+  if (videoUrl == undefined) {
+    return {
+      statusCode: 204,
+    };
+  }
+  
   const heatmapFullList = await getHeatMap(videoUrl);
   const scoreList = heatmapFullList.map(
     (person) => person.heatMarkerIntensityScoreNormalized
@@ -41,7 +49,7 @@ export const handler = async (event, context) => {
         scoreAverage: scoreAverage,
         bestMoments: bestMoments,
         maxHeatMarker,
-        minHeatMarker
+        minHeatMarker,
       },
     }),
   };

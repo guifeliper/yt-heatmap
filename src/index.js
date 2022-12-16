@@ -1,8 +1,14 @@
-import puppeteer from "puppeteer";
+import chromium from "chrome-aws-lambda";
+import puppeteer from "puppeteer-core";
 import fs from "fs";
 
 async function getHtml(url, options) {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    args: chromium.args,
+    executablePath:
+      process.env.CHROME_EXECUTABLE_PATH || (await chromium.executablePath),
+    headless: true,
+  });
   const page = await browser.newPage();
 
   await page.goto(url);
@@ -61,8 +67,8 @@ export async function getHeatMap(url) {
   }
 }
 
-var videoUrl = "https://www.youtube.com/watch?v=95PnFRjh-IE";
+// var videoUrl = "https://www.youtube.com/watch?v=95PnFRjh-IE";
 
-getHeatMap(videoUrl).then((res) => {
-  console.log(res);
-});
+// getHeatMap(videoUrl).then((res) => {
+//   console.log(res);
+// });
